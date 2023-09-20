@@ -1,0 +1,2 @@
+docker run --rm -ti -p 8787:8787 -e ROOT=true -e PASSWORD=rstudio rocker/rstudio
+docker run --rm -ti -p 8787:8787 -e USERID=1001 -e GROUPID=1001 -e ROOT=true -e PASSWORD=rstudio rocker/rstudio
