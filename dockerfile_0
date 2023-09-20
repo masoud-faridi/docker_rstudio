@@ -1,0 +1,66 @@
+FROM ubuntu
+
+USER root
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        vim \
+        wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+
+
+# RUN useradd -d /home/myuser -m myuser
+# WORKDIR /home/myuser
+ENV DEBIAN_FRONTEND=noninteractive
+
+CMD /bin/sh
+RUN apt-get update 
+RUN apt-get install -y --no-install-recommends build-essential r-base r-cran-randomforest python3 python3-pip python3-setuptools python3-dev
+RUN apt-get install -y wget
+# RUN apt-get update
+RUN apt-get update -y
+RUN apt-get install sudo -y
+
+WORKDIR /app
+
+COPY requirements.txt /app/requirements.txt
+
+##################
+RUN pip3 install -r requirements.txt
+COPY rstudio-2023.06.1-524-amd64.deb /app
+COPY . /app
+
+# RUN Rscript -e "install.packages('data.table')"
+# RUN Rscript -e "install.packages('DT')"
+# RUN R -e "install.packages('DT',dependencies=TRUE, repos='http://cran.rstudio.com/')"
+########################################
+
+RUN apt-get install -y gdebi-core
+# RUN gdebi -y ./rstudio-server-2023.06.2-561-amd64.deb
+# RUN gdebi -y ./app/rstudio-server-2023.06.2-561-amd64.deb
+RUN gdebi -n /app/rstudio-server-2023.06.2-561-amd64.deb
+
+
+# RUN apt-get install -f ./rstudio-2023.06.1-524-amd64.deb
+# RUN apt-get install -y -f ./rstudio-server-2023.06.2-561-amd64.deb
+# RUN rstudio --no-sandbox
+# RUN rstudio
+
+####################
+
+# copy our application code
+# ADD flask-app /opt/flask-app
+# WORKDIR /opt/flask-app
+
+# define the port number the container should expose
+# EXPOSE 5000 EXPOSE 5010 EXPOSE 5020 EXPOSE 5030
+# EXPOSE 5040 EXPOSE 5050 EXPOSE 5060 EXPOSE 5070
+# EXPOSE 5080 EXPOSE 5090
+
+
+# run the command
+# CMD ["python", "./app.py"]
